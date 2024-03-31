@@ -8,12 +8,8 @@ type OmitFirstArg<T> = T extends (firstArg: any, ...args: infer P) => infer R
 	? (this: GetThisType<T>, ...args: P) => R
 	: never;
 
-type PromisifyFunction<T> = T extends Method
-	? OmitFirstArg<(this: GetThisType<T>, ...args: Parameters<T>) => Promise<ReturnType<T>>>
-	: T;
-
 type PromisifyService<T> = {
-	[K in ExtractKeys<T, Method> & string as `${K}Promise`]: PromisifyFunction<T[K]>;
+	[K in keyof T]: T[K] extends (...args: infer Args) => infer R ? (...args: Args) => Promise<R> : T[K];
 };
 
 type MapValueToClient<T> = T extends Method
@@ -27,7 +23,7 @@ type MapValueToClient<T> = T extends Method
 type MapServiceToClient<T> = { [K in keyof T]: MapValueToClient<T[K]> };
 
 /** A table that mirrors the methods and events that were exposed on the server via the Client table. */
-type ServiceMirror<T> = T extends Service<{}, infer C> ? MapServiceToClient<C> & PromisifyService<C> : never;
+type ServiceMirror<T> = T extends Service<{}, infer C> ? PromisifyService<MapServiceToClient<C>> : never;
 
 interface KnitClient {
 	/**
