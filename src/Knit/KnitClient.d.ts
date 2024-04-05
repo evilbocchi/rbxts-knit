@@ -23,9 +23,9 @@ type MapValueToClient<T> = T extends Method
 type MapServiceToClient<T> = { [K in keyof T]: MapValueToClient<T[K]> };
 
 /** A table that mirrors the methods and events that were exposed on the server via the Client table. */
-type ServiceMirror<T> = T extends Service<{}, infer C> ? PromisifyService<MapServiceToClient<C>> : never;
+export type ServiceMirror<T> = T extends Service<{}, infer C> ? PromisifyService<MapServiceToClient<C>> : never;
 
-interface KnitClient {
+export interface KnitClient {
 	/**
 	 * @return Promise
 	 * Starts Knit. Should only be called once per client.
@@ -160,4 +160,3 @@ interface KnitClient {
 }
 
 declare const KnitClient: KnitClient;
-export = KnitClient;
