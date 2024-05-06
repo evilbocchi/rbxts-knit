@@ -50,7 +50,7 @@ export type Controller<T> = T & {
 	KnitStart(): void;
 };
 
-export { default as KnitClient } from "../Knit/KnitClient";
+export { KnitClient, ServiceMirror } from "../Knit/KnitClient";
 export { default as KnitServer } from "../Knit/KnitServer";
 
 export { default as RemoteProperty } from "../Comm/Server/RemoteProperty";
